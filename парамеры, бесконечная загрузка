@@ -1,0 +1,46 @@
+const payload = {};
+
+elements.forEach((element) => {
+  if (element.value !== undefined && element.value !== null && element.value !== '') {
+    payload[element.id] = element.value;
+  }
+});
+
+
+
+return {
+  rawSql: `
+    UPDATE Students
+    SET 
+        name = $1,
+        surname = $2,
+        logins = jsonb_set(
+            jsonb_set(
+                jsonb_set(
+                    jsonb_set(
+                        logins,
+                        '{kimai}',
+                        $3::jsonb
+                    ),
+                    '{gitlab}',
+                    $4::jsonb
+                ),
+                '{plane}',
+                $5::jsonb
+            ),
+            '{bookstack}',
+            $6::jsonb
+        )
+    WHERE CONCAT(name, ' ', surname) = $7;
+  `,
+  format: 'table',
+  params: [
+    payload.name,
+    payload.surname,
+    payload.kimai,
+    payload.gitlab,
+    payload.plane,
+    payload.bookstack,
+    student
+  ]
+};
