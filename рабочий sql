@@ -1,0 +1,22 @@
+UPDATE Students
+SET 
+  name = 'Еваа',
+  surname = 'Синицина',
+  logins = jsonb_set(
+    jsonb_set(
+      jsonb_set(
+        jsonb_set(
+          logins,
+          '{kimai}',
+          '"eer"'::jsonb 
+        ),
+        '{gitlab}',
+        '"eer"'::jsonb 
+      ),
+      '{plane}',
+      '"eer"'::jsonb 
+    ),
+    '{bookstack}',
+    '"eer"'::jsonb 
+  )
+WHERE CONCAT(name, ' ', surname) = 'Алёна Синицина';
