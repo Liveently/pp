@@ -1,0 +1,39 @@
+const payload = {};
+
+elements.forEach((element) => {
+  if (element.value !== undefined && element.value !== null && element.value !== '') {
+    payload[element.id] = element.value;
+  }
+});
+
+let loginsUpdate = 'logins';
+
+
+if (payload.kimai !== undefined) {
+  loginsUpdate = `jsonb_set(${loginsUpdate}, '{kimai}', '${JSON.stringify(payload.kimai)}'::jsonb)`;
+}
+if (payload.gitlab !== undefined) {
+  loginsUpdate = `jsonb_set(${loginsUpdate}, '{gitlab}', '${JSON.stringify(payload.gitlab)}'::jsonb)`;
+}
+if (payload.plane !== undefined) {
+  loginsUpdate = `jsonb_set(${loginsUpdate}, '{plane}', '${JSON.stringify(payload.plane)}'::jsonb)`;
+}
+if (payload.bookstack !== undefined) {
+  loginsUpdate = `jsonb_set(${loginsUpdate}, '{bookstack}', '${JSON.stringify(payload.bookstack)}'::jsonb)`;
+}
+
+
+const sql = `
+  UPDATE Students
+  SET 
+      name = '${payload.name}',
+      surname = '${payload.surname}',
+      logins = ${loginsUpdate}
+  WHERE CONCAT(name, ' ', surname) = '${student}';
+`;
+
+
+return {
+  rawSql: sql,
+  format: 'table'
+};
