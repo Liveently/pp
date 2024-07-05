@@ -1,0 +1,40 @@
+const payload = {};
+
+elements.forEach((element) => {
+  if (element.value !== undefined && element.value !== null && element.value !== '') {
+    payload[element.id] = element.value;
+  }
+});
+
+const kimaiJson = JSON.stringify(payload.kimai);
+const gitlabJson = JSON.stringify(payload.gitlab);
+const planeJson = JSON.stringify(payload.plane);
+const bookstackJson = JSON.stringify(payload.bookstack);
+
+return {
+  rawSql: `
+    INSERT INTO Students (name, surname, logins)
+    VALUES (
+      '${payload.name}',
+      '${payload.surname}',
+      jsonb_set(
+        jsonb_set(
+          jsonb_set(
+            jsonb_set(
+              '{}',
+              '{kimai}',
+              '${kimaiJson}'::jsonb
+            ),
+            '{gitlab}',
+            '${gitlabJson}'::jsonb
+          ),
+          '{plane}',
+          '${planeJson}'::jsonb
+        ),
+        '{bookstack}',
+        '${bookstackJson}'::jsonb
+      )
+    )
+  `,
+  format: 'table'
+};
